@@ -18,8 +18,9 @@ import { NavLink, useLocation } from "react-router-dom";
 // this function creates the links and collapses that appear in the sidebar (left menu)
 
 
-const SidebarContent = ({ logoText, routes }) => {
-
+const SidebarContent = (props) => {
+    const { logoText, routes } = props;
+    console.log('SidebarContent :routes -> ', routes);
     // to check for active links and opened collapses
   let location = useLocation();
   // this is for the rest of the collapses
@@ -67,7 +68,7 @@ const SidebarContent = ({ logoText, routes }) => {
         );
       }
       return (
-        <NavLink to={prop.layout + prop.path} key={prop.name}>
+        <NavLink to={'/app' + prop.layout + prop.path} key={prop.name}>
           {activeRoute(prop.layout + prop.path) === "active" ? (
             <Button
               boxSize="initial"

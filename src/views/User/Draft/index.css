@@ -1,0 +1,62 @@
+.flow {
+    flex-direction: column;
+    display: flex;
+    flex-grow: 1;
+    height: 100%;
+    width: 100%;
+    padding-top:100px;
+    position: absolute;
+    background: #ccc;
+    color: Background;
+}
+
+    .flow aside {
+        border-right: 1px solid #eee;
+        padding: 15px 10px;
+        font-size: 12px;
+        background: #fcfcfc;
+    }
+
+        .flow aside .description {
+            margin-bottom: 10px;
+        }
+
+    .flow .node {
+        height: 20px;
+        padding: 4px;
+        border: 1px solid #1a192b;
+        border-radius: 5px;
+        margin: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: grab;
+    }
+
+        .flow .node.input {
+            border-color: #0041d0;
+        }
+
+        .flow .node.output {
+            border-color: #ff0072;
+        }
+
+    .flow .reactflow-wrapper {
+        flex-grow: 1;
+        height: 100%;
+    }
+
+    .flow .selectall {
+        margin-top: 10px;
+    }
+
+@media screen and (min-width: 768px) {
+    .flow {
+        flex-direction: row;
+    }
+
+        .flow aside {
+            width: 20%;
+            max-width: 250px;
+        }
+}

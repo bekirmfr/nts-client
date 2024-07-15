@@ -19,13 +19,12 @@ import SidebarResponsive from "components/Sidebar/SidebarResponsive";
 import PropTypes from "prop-types";
 import React from "react";
 import { NavLink } from "react-router-dom";
-import routes from "routes.js";
 export default function AuthNavbar(props) {
   const [open, setOpen] = React.useState(false);
   const handleDrawerToggle = () => {
     setOpen(!open);
-  };
-  const { logo, logoText, secondary, ...rest } = props;
+    };
+    const { routes, logo, logoText, secondary, ...rest } = props;
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
     return window.location.href.indexOf(routeName) > -1 ? true : false;
@@ -56,7 +55,7 @@ export default function AuthNavbar(props) {
   );
   let navbarPosition = "fixed";
   let colorButton = "white";
-  if (props.secondary === true) {
+  if (secondary === true) {
     navbarIcon = "white";
     navbarBg = "none";
     navbarBorder = "none";
@@ -87,7 +86,7 @@ export default function AuthNavbar(props) {
   );
   var linksAuth = (
     <HStack display={{ sm: "none", lg: "flex" }}>
-      <NavLink to="/admin/dashboard">
+      <NavLink to="/dashboard">
         <Button
           fontSize="sm"
           ms="0px"
@@ -101,7 +100,7 @@ export default function AuthNavbar(props) {
           <Text>Dashboard</Text>
         </Button>
       </NavLink>
-      <NavLink to="/admin/profile">
+      <NavLink to="/profile">
         <Button
           fontSize="sm"
           ms="0px"
@@ -176,8 +175,8 @@ export default function AuthNavbar(props) {
           display={{ base: "flex", lg: "none" }}
         >
           <SidebarResponsive
-            logoText={props.logoText}
-            secondary={props.secondary}
+            logoText={logoText}
+            secondary={secondary}
             routes={routes}
             // logo={logo}
             {...rest}

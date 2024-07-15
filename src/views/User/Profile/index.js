@@ -10,8 +10,10 @@ import Header from "./components/Header";
 import PlatformSettings from "./components/PlatformSettings";
 import ProfileInformation from "./components/ProfileInformation";
 import Projects from "./components/Projects";
+import AuthService from 'components/Auth/AuthService';
 
 function Profile() {
+   const auth = React.useContext(AuthService.Context);
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
   const bgProfile = useColorModeValue(
@@ -25,8 +27,8 @@ function Profile() {
         backgroundHeader={ProfileBgImage}
         backgroundProfile={bgProfile}
         avatarImage={avatar4}
-        name={"Esthera Jackson"}
-        email={"esthera@simmmple.com"}
+        name={auth.getProfile().username}
+              email={auth.getProfile().email}
         tabs={[
           {
             name: "OVERVIEW",

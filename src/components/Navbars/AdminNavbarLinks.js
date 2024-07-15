@@ -27,10 +27,15 @@ import SidebarResponsive from "components/Sidebar/SidebarResponsive";
 import PropTypes from "prop-types";
 import React from "react";
 import { NavLink } from "react-router-dom";
-import routes from "routes.js";
+import AuthService from 'components/Auth/AuthService';
 
 export default function HeaderLinks(props) {
-  const { variant, children, fixed, secondary, onOpen, ...rest } = props;
+    const auth = React.useContext(AuthService.Context);
+    const { routes, variant, children, fixed, secondary, logoText, onOpen, ...rest } = props;
+    const handleLogout = () => {
+        auth.logout();
+        props.history.replace('/app/auth/signin');
+    }
 
   // Chakra Color Mode
   let mainTeal = useColorModeValue("teal.300", "teal.300");
@@ -43,7 +48,8 @@ export default function HeaderLinks(props) {
     navbarIcon = "white";
     mainText = "white";
   }
-  const settingsRef = React.useRef();
+    const settingsRef = React.useRef();
+    
   return (
     <Flex
       pe={{ sm: "0px", md: "16px" }}
@@ -92,35 +98,61 @@ export default function HeaderLinks(props) {
           placeholder="Type here..."
           borderRadius="inherit"
         />
-      </InputGroup>
-      <NavLink to="/auth/signin">
-        <Button
-          ms="0px"
-          px="0px"
-          me={{ sm: "2px", md: "16px" }}
-          color={navbarIcon}
-          variant="transparent-with-icon"
-          rightIcon={
-            document.documentElement.dir ? (
-              ""
-            ) : (
-              <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
-            )
-          }
-          leftIcon={
-            document.documentElement.dir ? (
-              <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
-            ) : (
-              ""
-            )
-          }
-        >
-          <Text display={{ sm: "none", md: "flex" }}>Sign In</Text>
-        </Button>
-      </NavLink>
+          </InputGroup>
+          {auth.loggedIn() ? (
+              <Button
+              onClick={ handleLogout}
+              ms="0px"
+              px="0px"
+              me={{ sm: "2px", md: "16px" }}
+              color={navbarIcon}
+              variant="transparent-with-icon"
+              rightIcon={
+                  document.documentElement.dir ? (
+                      ""
+                  ) : (
+                      <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
+                  )
+              }
+              leftIcon={
+                  document.documentElement.dir ? (
+                      <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
+                  ) : (
+                      ""
+                  )
+              }
+          >
+              <Text display={{ sm: "none", md: "flex" }}>Log Out</Text>
+          </Button>) : (
+              <NavLink to="/app/auth/signin">
+              <Button
+                  ms="0px"
+                  px="0px"
+                  me={{ sm: "2px", md: "16px" }}
+                  color={navbarIcon}
+                  variant="transparent-with-icon"
+                  rightIcon={
+                      document.documentElement.dir ? (
+                          ""
+                      ) : (
+                          <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
+                      )
+                  }
+                  leftIcon={
+                      document.documentElement.dir ? (
+                          <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
+                      ) : (
+                          ""
+                      )
+                  }
+              >
+                  <Text display={{ sm: "none", md: "flex" }}>Sign In</Text>
+              </Button>
+          </NavLink>)}
+      
       <SidebarResponsive
-        logoText={props.logoText}
-        secondary={props.secondary}
+        logoText={logoText}
+        secondary={secondary}
         routes={routes}
         // logo={logo}
         {...rest}

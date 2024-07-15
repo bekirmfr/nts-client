@@ -24,6 +24,8 @@ import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
 function SidebarResponsive(props) {
+    const { logoText, routes, ...rest } = props;
+    console.log('SidebarResponsive :routes -> ', routes);
     // to check for active links and opened collapses
     let location = useLocation();
     // this is for the rest of the collapses
@@ -72,8 +74,8 @@ function SidebarResponsive(props) {
           );
         }
         return (
-          <NavLink to={prop.layout + prop.path} key={prop.name}>
-            {activeRoute(prop.layout + prop.path) === "active" ? (
+          <NavLink to={'/app' + prop.layout + prop.path} key={prop.name}>
+                {activeRoute(prop.layout + prop.path) === "active" ? (
               <Button
                 boxSize="initial"
                 justifyContent="flex-start"
@@ -178,8 +180,6 @@ function SidebarResponsive(props) {
         );
       });
     };
-    
-    const { logoText, routes, ...rest } = props;
   
     var links = <>{createLinks(routes)}</>;
     //  BRAND

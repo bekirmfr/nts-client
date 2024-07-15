@@ -17,8 +17,13 @@ import {
 import BgSignUp from "assets/img/BgSignUp.png";
 import React from "react";
 import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa";
+import AuthService from "components/Auth/AuthService.js";
 
-function SignUp() {
+function SignUp(props) {
+    const Auth = React.useContext(AuthService.Context);
+    if (Auth.loggedIn()) {
+        props.history.replace('/app');
+    }
   const titleColor = useColorModeValue("teal.300", "teal.200");
   const textColor = useColorModeValue("gray.700", "white");
   const bgColor = useColorModeValue("white", "gray.700");

@@ -1,9 +1,9 @@
 const MainPanel = {
   baseStyle: {
     float: "right",
-    maxWidth: "100%",
-    overflow: "auto",
+    //overflow: "auto",
     position: "relative",
+    maxWidth: "100%",
     maxHeight: "100%",
     transition: "all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1)",
     transitionDuration: ".2s, .2s, .35s",

@@ -7,7 +7,7 @@ import AdminNavbar from 'components/Navbars/AdminNavbar.js';
 import Sidebar from 'components/Sidebar';
 import React, { useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { adminRoutes as routes } from 'routes.js';
+import { userRoutes as routes } from 'routes.js';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
@@ -75,7 +75,7 @@ export default function Dashboard(props) {
 			if (prop.category === 'account') {
 				return getRoutes(prop.views);
 			}
-			if (prop.layout === '/admin') {
+			if (prop.layout === '/user') {
 				return <Route path={'/app' + prop.layout + prop.path} component={prop.component} key={key} />;
 			} else {
 				return null;
@@ -101,7 +101,7 @@ export default function Dashboard(props) {
 				}}>
 				<Portal>
 					<AdminNavbar
-						routes={routes}
+						routes={routes }
 						onOpen={onOpen}
 						logoText={'PURITY UI DASHBOARD'}
 						brandText={getActiveRoute(routes)}
@@ -115,7 +115,7 @@ export default function Dashboard(props) {
 						<PanelContainer>
 							<Switch>
 								{getRoutes(routes)}
-								<Redirect from='/app/admin' to='/app/admin/dashboard' />
+								<Redirect from='/app/user' to='/app/user/dashboard' />
 							</Switch>
 						</PanelContainer>
 					</PanelContent>

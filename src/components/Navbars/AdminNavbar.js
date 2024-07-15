@@ -14,7 +14,8 @@ import AdminNavbarLinks from "./AdminNavbarLinks";
 
 export default function AdminNavbar(props) {
   const [scrolled, setScrolled] = useState(false);
-  const {
+    const {
+    routes,
     variant,
     children,
     fixed,
@@ -148,10 +149,12 @@ export default function AdminNavbar(props) {
         </Box>
         <Box ms="auto" w={{ sm: "100%", md: "unset" }}>
           <AdminNavbarLinks
+            routes={ props.routes}
             onOpen={props.onOpen}
             logoText={props.logoText}
             secondary={props.secondary}
             fixed={props.fixed}
+            {...rest}
           />
         </Box>
       </Flex>

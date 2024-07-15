@@ -1,4 +1,5 @@
 import React from "react";
+import AuthService from "components/Auth/AuthService.js";
 // Chakra imports
 import {
   Box,
@@ -16,7 +17,32 @@ import {
 // Assets
 import signInImage from "assets/img/signInImage.png";
 
-function SignIn() {
+function SignIn(props) {
+    const [username, setUsername] = React.useState('');
+    const [password, setPassword] = React.useState('');
+    const Auth = React.useContext(AuthService.Context);
+    if (Auth.loggedIn()) {
+        props.history.replace('/app');
+    }
+
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
+
+        Auth.login(username, password)
+            .then(res => {
+                props.history.replace('/app');
+            })
+            .catch(err => {
+                alert(err);
+            })
+    }
+
+    const handleChange = (e) => {
+        if (e.target.name == 'username') setUsername(e.target.value);
+        if (e.target.name == 'password') setPassword(e.target.value);
+    }
+
+    
   // Chakra color mode
   const titleColor = useColorModeValue("teal.300", "teal.200");
   const textColor = useColorModeValue("gray.400", "white");
@@ -50,30 +76,35 @@ function SignIn() {
               color={textColor}
               fontWeight='bold'
               fontSize='14px'>
-              Enter your email and password to sign in
-            </Text>
+              Enter your username and password to sign in
+             </Text>
+            <form onSubmit={handleFormSubmit}>
             <FormControl>
               <FormLabel ms='4px' fontSize='sm' fontWeight='normal'>
                 Email
               </FormLabel>
               <Input
+                name = 'username'
                 borderRadius='15px'
                 mb='24px'
                 fontSize='sm'
                 type='text'
-                placeholder='Your email adress'
+                placeholder='Your username'
                 size='lg'
+                onChange={handleChange}
               />
               <FormLabel ms='4px' fontSize='sm' fontWeight='normal'>
                 Password
               </FormLabel>
               <Input
+                name='password'
                 borderRadius='15px'
                 mb='36px'
                 fontSize='sm'
                 type='password'
                 placeholder='Your password'
                 size='lg'
+                onChange={handleChange}
               />
               <FormControl display='flex' alignItems='center'>
                 <Switch id='remember-login' colorScheme='teal' me='10px' />
@@ -103,6 +134,7 @@ function SignIn() {
                 SIGN IN
               </Button>
             </FormControl>
+            </form>
             <Flex
               flexDirection='column'
               justifyContent='center'
