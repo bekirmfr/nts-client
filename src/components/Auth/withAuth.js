@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import AuthService from './AuthService.js';
+import Services from 'Services';
 
 const Auth = new AuthService('http://localhost:3000');
 

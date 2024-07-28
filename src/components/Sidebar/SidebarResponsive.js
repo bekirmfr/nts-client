@@ -25,7 +25,6 @@ import { NavLink, useLocation } from "react-router-dom";
 
 function SidebarResponsive(props) {
     const { logoText, routes, ...rest } = props;
-    console.log('SidebarResponsive :routes -> ', routes);
     // to check for active links and opened collapses
     let location = useLocation();
     // this is for the rest of the collapses

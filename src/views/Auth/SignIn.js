@@ -1,5 +1,5 @@
 import React from "react";
-import AuthService from "components/Auth/AuthService.js";
+import Services from "Services";
 // Chakra imports
 import {
   Box,
@@ -20,15 +20,14 @@ import signInImage from "assets/img/signInImage.png";
 function SignIn(props) {
     const [username, setUsername] = React.useState('');
     const [password, setPassword] = React.useState('');
-    const Auth = React.useContext(AuthService.Context);
-    if (Auth.loggedIn()) {
+    if (Services.auth.loggedIn()) {
         props.history.replace('/app');
     }
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
 
-        Auth.login(username, password)
+        Services.auth.login(username, password)
             .then(res => {
                 props.history.replace('/app');
             })

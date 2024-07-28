@@ -8,15 +8,14 @@ export default (props) => {
     };
     const getNodes = (nodes) => {
         return Object.values(nodes).map((node, index) => {
-            console.log('node: ', node);
             var classData = node.class ? node.class : 'default';
             return (
-                <div className={"node " + classData} onDragStart={(event) => onDragStart(event, node.id)} draggable key={index }>
+                <div className={"node " + classData} onDragStart={(event) => onDragStart(event, node.id)} draggable key={index}>
                     {node.text}
                 </div>
-            )
+            );
         });
-    };
+    }
 
     return (
         <aside>
@@ -24,4 +23,4 @@ export default (props) => {
             {getNodes(nodeTypes) }
         </aside>
     );
-};
+}

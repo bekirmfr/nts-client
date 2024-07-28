@@ -1,0 +1,20 @@
+.react-flow__node {
+    font-size: 12px;
+    background: #fff;
+    border: 1px solid #555;
+    border-radius: 3px;
+    text-align: center;
+    margin: 0px;
+    padding:0 0px;
+}
+.react-flow__node input {
+    color: Background;
+    background: #ccc;
+}
+.react-flow__node-colorSelector {
+    font-size: 12px;
+    background: #eee;
+    border: 1px solid #555;
+    border-radius: 5px;
+    text-align: center;
+}

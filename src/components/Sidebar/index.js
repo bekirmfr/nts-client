@@ -14,7 +14,6 @@ function Sidebar(props) {
   let variantChange = "0.2s linear";
 
     const { logoText, routes, sidebarVariant } = props;
-    console.log('Sidebar :routes -> ', routes);
 
   //  BRAND
   //  Chakra Color Mode

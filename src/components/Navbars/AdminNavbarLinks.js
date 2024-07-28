@@ -27,10 +27,9 @@ import SidebarResponsive from "components/Sidebar/SidebarResponsive";
 import PropTypes from "prop-types";
 import React from "react";
 import { NavLink } from "react-router-dom";
-import AuthService from 'components/Auth/AuthService';
+import Services from 'Services';
 
 export default function HeaderLinks(props) {
-    const auth = React.useContext(AuthService.Context);
     const { routes, variant, children, fixed, secondary, logoText, onOpen, ...rest } = props;
     const handleLogout = () => {
         auth.logout();
@@ -99,7 +98,7 @@ export default function HeaderLinks(props) {
           borderRadius="inherit"
         />
           </InputGroup>
-          {auth.loggedIn() ? (
+          {Services.auth.loggedIn() ? (
               <Button
               onClick={ handleLogout}
               ms="0px"

@@ -11,7 +11,7 @@ class AuthService {
     }
 ;
     constructor(domain) {
-        this.domain = domain || 'http://localhost:3000'; //process.env.DOMAIN
+        this.domain = domain || 'https://localhost:3000'; //process.env.DOMAIN
         this.fetch = this.fetch.bind(this);
         this.login = this.login.bind(this);
         this.getProfile = this.getProfile.bind(this);
@@ -20,7 +20,7 @@ class AuthService {
             Object.freeze(AuthService.Context);
         } else {
             console.log(new Error('Duplicate Auth Service! Deleting this.'))
-            delete this;
+            return;
         }
     }
 
@@ -59,19 +59,7 @@ class AuthService {
     }
 
     isAdmin() {
-        const token = this.getToken();
-        try {
-            const decoded = jwtDecode(token);
-            if (decoded.isAdmin == 'TRUE') {
-                console.log('isAdmin: ', decoded.isAdmin == 'TRUE');
-                return true;
-            }
-            return false;
-        }
-        catch (err) {
-            console.log(err);
-            return false;
-        }
+        return this.getToken() && this.getProfile().isAdmin === 'TRUE';
     }
 
     setToken(idToken) {
@@ -81,7 +69,7 @@ class AuthService {
 
     getToken() {
         // Retrieves the user token from localStorage
-        return localStorage.getItem('id_token')
+        return localStorage.getItem('id_token');
     }
 
     logout() {
@@ -90,7 +78,103 @@ class AuthService {
     }
 
     getProfile() {
+        console.log('token: ', this.getToken());
         return jwtDecode(this.getToken());
+    }
+
+    getSubscription() {
+        return this.fetch(`${this.domain}/subscription/get`, {
+            method: 'POST'
+        }).then(res => {
+            console.log('getSubscription res: ', res);
+            return Promise.resolve(res);
+        }) 
+    }
+    getStrategies() {
+        return new Promise((resolve, reject) => {
+            this.fetch(`${this.domain}/strategy/list`, {
+                method: 'POST'
+            })
+                .then(res => {
+                    const { error, data } = res;
+                    if (error) {
+                        return reject(error);
+                    }
+                    console.log('getStrategies res: ', data);
+                    return resolve(data);
+                });
+        });
+    }
+
+    viewStrategy(id) {
+        return new Promise((resolve, reject) => {
+            this.fetch(`${this.domain}/strategy/view/${id}`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    id
+                })
+            })
+                .then(res => {
+                    const { error, data } = res;
+                    if (error) {
+                        return reject(error);
+                    }
+                    console.log('getStrategies res: ', data);
+                    return resolve(data);
+                });
+        });
+    }
+
+    editStrategy(id) {
+        return new Promise((resolve, reject) => {
+            this.fetch(`${this.domain}/strategy/edit/${id}`, {
+                method: 'POST',
+                body: JSON.stringify({ id })
+            })
+                .then(res => {
+                    const { error, data } = res;
+                    if (error) {
+                        console.log('editStrategy res: ', data);
+                        reject(error);
+                    }
+                    console.log('editStrategy res: ', data);
+                    resolve(data);
+                })
+                .catch(err => {
+                    console.log(err);
+                    reject(err);
+                });
+        })
+    }
+
+    connectStrategy(id) {
+        return new Promise((resolve, reject) => {
+            this.fetch(`${this.domain}/strategy/edit/${id}`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    id
+                })
+            })
+                .then(res => {
+                    const { error, data } = res;
+                    if (error) {
+                        console.log('editStrategy res: ', data);
+                        return reject(error);
+                    }
+                    console.log('editStrategy res: ', data);
+                    return resolve(data);
+                });
+        });
+    }
+
+    async deploy(data) {
+        return this.fetch(`${this.domain}/strategy/create`, {
+            method: 'POST',
+            body: JSON.stringify(data)
+        }).then(res => {
+            console.log('deploy flow form data result: ', res);
+            return Promise.resolve(res);
+        })
     }
 
 

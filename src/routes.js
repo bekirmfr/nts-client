@@ -1,9 +1,10 @@
 // import views
 import Dashboard from "views/User/Dashboard";
 import Tables from "views/User/Tables";
+import Strategies from "views/User/Strategies";
 import Billing from "views/User/Billing";
 import Profile from "views/User/Profile";
-import Draft from "views/User/Draft";
+import Flow from "views/User/Flow";
 import SignIn from "views/Auth/SignIn.js";
 import SignUp from "views/Auth/SignUp.js";
 
@@ -66,17 +67,17 @@ export const userRoutes = [
         layout: "/user",
     },
     {
-        path: "/draft",
-        name: "Draft",
+        path: "/flow/:mode/:id",
+        name: "Flow",
         icon: <AddIcon color="inherit" />,
-        component: Draft,
+        component: Flow,
         layout: "/user",
     },
     {
-        path: "/tables",
-        name: "Tables",
+        path: "/strategies",
+        name: "Strategies",
         icon: <StatsIcon color="inherit" />,
-        component: Tables,
+        component: Strategies,
         layout: "/user",
     },
     {

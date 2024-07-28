@@ -3,6 +3,7 @@ import { Flex, Grid, useColorModeValue } from "@chakra-ui/react";
 import avatar4 from "assets/img/avatars/avatar4.png";
 import ProfileBgImage from "assets/img/ProfileBackground.png";
 import React from "react";
+import Services from "Services";
 import { FaCube, FaPenFancy } from "react-icons/fa";
 import { IoDocumentsSharp } from "react-icons/io5";
 import Conversations from "./components/Conversations";
@@ -10,10 +11,10 @@ import Header from "./components/Header";
 import PlatformSettings from "./components/PlatformSettings";
 import ProfileInformation from "./components/ProfileInformation";
 import Projects from "./components/Projects";
-import AuthService from 'components/Auth/AuthService';
+import SubscriptionInformation from "./components/SubscriptionInformation";
 
 function Profile() {
-   const auth = React.useContext(AuthService.Context);
+    const profile = Services.auth.getProfile();
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
   const bgProfile = useColorModeValue(
@@ -27,8 +28,8 @@ function Profile() {
         backgroundHeader={ProfileBgImage}
         backgroundProfile={bgProfile}
         avatarImage={avatar4}
-        name={auth.getProfile().username}
-              email={auth.getProfile().email}
+              name={profile.username}
+              email={profile.email}
         tabs={[
           {
             name: "OVERVIEW",
@@ -57,10 +58,10 @@ function Profile() {
           }
           name={"Esthera Jackson"}
           mobile={"(44) 123 1234 123"}
-          email={"esthera@simmmple.com"}
+                  email={profile.email}
           location={"United States"}
         />
-        <Conversations title={"Conversations"} />
+        <SubscriptionInformation />
       </Grid>
       <Projects title={"Projects"} description={"Architects design houses"} />
     </Flex>

@@ -20,7 +20,6 @@ import { NavLink, useLocation } from "react-router-dom";
 
 const SidebarContent = (props) => {
     const { logoText, routes } = props;
-    console.log('SidebarContent :routes -> ', routes);
     // to check for active links and opened collapses
   let location = useLocation();
   // this is for the rest of the collapses

@@ -16,6 +16,5 @@ root.render(
       <Route path={`/app`} component={App} />
       <Redirect from='/' to='/home'/>
     </Switch>
-        </BrowserRouter>,
-  document.getElementById("root")
+    </BrowserRouter>
 );
