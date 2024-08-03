@@ -2,7 +2,7 @@ import React, { useRef, useCallback, useState, useEffect, useMemo, memo } from '
 import { BrowserRouter, Route, Switch, Redirect, useParams } from "react-router-dom";
 const { v4: uuidv4 } = require('uuid');
 import Services from "Services";
-import DeployModal from "./DeployModal.js";
+import DeployModal from "./components/DeployModal.js";
 //ReactFlow imports
 import {
     ReactFlow,
@@ -17,17 +17,21 @@ import {
 import '@xyflow/react/dist/style.css';
 import './index.css';
 import {
+    useDisclosure,
+    useToast,
     Flex,
     Button,
     ButtonGroup,
-    useDisclosure,
+    HStack,
+    Tag,
+    TagLabel,
+    TagRightIcon,
+    Badge,
 } from "@chakra-ui/react";
-import { useToast } from '@chakra-ui/react';
-
-import Sidebar from './Sidebar';
-import Console from './Console';
+import { LockIcon, UnlockIcon } from '@chakra-ui/icons'
+import Sidebar from './components/Sidebar';
+import Console from './components/Console';
 import nodesData from './Nodes'
-import './nodes.css';
 
 const nodeTypes = {};
 for (var key in nodesData) {
@@ -50,12 +54,6 @@ const View = () => {
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    const nodeTypes = {};
-    for (var key in nodesData) {
-        if (nodesData.hasOwnProperty(key)) {
-            nodeTypes[key] = nodesData[key].node;
-        }
-    }
     useEffect(() => {
         async function loadFlow(id) {
             try {
@@ -101,8 +99,27 @@ const View = () => {
             const eventData = JSON.parse(event.data);
             console.log('Received message:', eventData);
             // Update logs
-            const { action, from, data, message, timestamp, logLevel } = eventData;
+            const { action, from, target, data, message, timestamp, logLevel } = eventData;
             var log = `[${new Date(timestamp).toLocaleString()}]: ${from} => ${action} ${data} ${message} (${logLevel})`;
+            switch (action) {
+                case 'execute':
+                    // Find the child element with the specific attribute
+                    const element = document.querySelector(`[data-id="${target}"]`);
+                    if (!element) console.error(`Unable to find flow node ${target}.`);
+                    if (data == 'start') {
+                        element.classList.add('executeStart');
+                    }else if (data == 'success') {
+                        element.classList.remove('executeStart');
+                        element.classList.add('executeSuccess');
+
+                        setTimeout(() => {
+                            element.classList.remove('executeSuccess');
+                        }, 200);
+                    }
+                    
+                    break;
+                default:
+            }
             window.addConsoleMessage(log);
         };
 
@@ -214,15 +231,23 @@ const View = () => {
                         nodesConnectable={false}
                         nodesDraggable={false}
                     >
-                    <Controls />
-                    <Panel position="bottom-right">
-                        <ButtonGroup size='xs' isAttached variant='outline'>
-                                <Button isDisabled={state && state == 'live'} onClick={onStart}>Start</Button>
-                                <Button isDisabled={state && state != 'live'} onClick={onTick}>Tick</Button>
-                                <Button isDisabled={state && state == 'idle'} onClick={onStop}>Stop</Button>
-                        </ButtonGroup>
-                    </Panel>
-                </ReactFlow>
+                        <Controls />
+                        <Panel position="bottom-right">
+                            <HStack spacing={1}>
+                                <Tag variant='solid' colorScheme={state == 'live' ? 'red' : 'grey' } >
+                                    <TagLabel>{ state }</TagLabel>
+                                    <TagRightIcon as={state == 'live' ? LockIcon : UnlockIcon} />
+                                </Tag>
+                                <Badge variant='solid'>{ data && data.access }</Badge>
+                            
+                                <ButtonGroup size='xs' isAttached variant='outline'>
+                                    <Button isDisabled={state && state == 'live'} onClick={onStart}>Start</Button>
+                                    <Button isDisabled={state && state != 'live'} onClick={onTick}>Tick</Button>
+                                    <Button isDisabled={state && state == 'idle'} onClick={onStop}>Stop</Button>
+                                </ButtonGroup>
+                            </HStack>
+                        </Panel>
+                    </ReactFlow>
                 </div>
             </div>
             <Console />
@@ -239,7 +264,7 @@ const Edit = () => {
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    const getId = () => `node_${uuidv4()}`;
+    const getId = () => `node-${uuidv4()}`;
 
     const reactFlowWrapper = useRef(null);
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -297,10 +322,14 @@ const Edit = () => {
                 });
             });
     };
+
     useEffect(() => {
         if (id) loadFlow();
     }, []);
 
+    useEffect(() => {
+        onReload();
+    }, [flow]);
 
     const onConnect = useCallback(
         (params) => setEdges((eds) => addEdge(params, eds)),

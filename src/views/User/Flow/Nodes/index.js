@@ -18,6 +18,7 @@ import {
     Wrap
 } from '@chakra-ui/react';
 import { InfoOutlineIcon } from '@chakra-ui/icons';
+import './index.css';
 
 const NumberNode = memo((props) => {
     //{ data, isConnectable = true, isEditable = true }
