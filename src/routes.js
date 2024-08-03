@@ -67,7 +67,7 @@ export const userRoutes = [
         layout: "/user",
     },
     {
-        path: "/flow/:mode/:id",
+        path: "/flow",
         name: "Flow",
         icon: <AddIcon color="inherit" />,
         component: Flow,

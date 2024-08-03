@@ -7,6 +7,7 @@ import AdminNavbar from 'components/Navbars/AdminNavbar.js';
 import Sidebar from 'components/Sidebar';
 import React, { useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import Services from 'Services';
 import { useParams } from 'react-router';
 import { userRoutes as routes } from 'routes.js';
 import '@fontsource/roboto/400.css';
@@ -115,8 +116,10 @@ export default function Dashboard(props) {
 					<PanelContent>
 						<PanelContainer>
 							<Switch>
-								{getRoutes(routes)}
-								<Redirect from='/app/user' to='/app/user/dashboard' />
+								{Services.auth.loggedIn() && getRoutes(routes) }
+								{!Services.auth.loggedIn() && (
+									<Redirect from='/app/user' to='/app/auth' />
+								)}
 							</Switch>
 						</PanelContainer>
 					</PanelContent>

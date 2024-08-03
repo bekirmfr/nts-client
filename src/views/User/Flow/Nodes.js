@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import { Handle, Position } from '@xyflow/react';
 import {
     Input,
@@ -9,50 +9,81 @@ import {
     NumberIncrementStepper,
     NumberDecrementStepper,
     InputLeftAddon,
+    Select,
     Text,
     Heading,
     Tooltip,
     Flex,
-    Spacer
+    Spacer,
+    Wrap
 } from '@chakra-ui/react';
 import { InfoOutlineIcon } from '@chakra-ui/icons';
 
 const NumberNode = memo((props) => {
     //{ data, isConnectable = true, isEditable = true }
-    const { data, isConnectable, isEditable = true } = props;
+    const { id, data, isConnectable, isEditable = true } = props;
+    const [number, setNumber] = useState(data.parameters.number || 0);
+    const [runMode, setRunMode] = useState(data.parameters.runMode || 'onStrategyStart');
+
     const handleOnNumberChange = (val) => {
-        data.parameters.number = Number.parseFloat(val) ;
+        setNumber(Number.parseFloat(val));
     }
+    const handleOnRunModeChange = (e) => {
+        console.log('handleOnRunModeChange: ', e);
+        setRunMode(e.target.value);
+    }
+
+    useEffect(() => {
+        data.parameters.number = number;
+        data.parameters.runMode = runMode;
+    }, [number, runMode]);
+
     return (
-        <div classnname ='node'>
+        <div class={ id } >
             <Flex m='5px'>
-                <Heading size='sm'>
-                    Number
-                </Heading>
+                <Wrap spacing='5px'>
+                    <Heading size='sm'>
+                        Number
+                    </Heading>
+                    <Text>({id})</Text>
+                </Wrap>
                 <Spacer />
                 <Tooltip label='Outputs a custom number.' fontSize='md'>
                     <InfoOutlineIcon />
                 </Tooltip>
             </Flex>
             {isEditable ? (
-                <NumberInput
-                className="nodrag"
-                defaultValue={data.parameters.number ? data.parameters.number : 0}
-                    onChange={handleOnNumberChange}
-                w='min'>
-                <InputGroup>
-                    <InputLeftAddon >number</InputLeftAddon>
-                    <NumberInputField
-                        type="number"
-                        placeholder='number'
-                        minW='100px'
-                    />
-                </InputGroup>
-                <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                </NumberInputStepper>
-                </NumberInput>
+                <>
+                    <Flex align='center' mb='18px'>
+                        <InputGroup>
+                            <InputLeftAddon >Run Mode</InputLeftAddon>
+                            <Select id='runMode' defaultValue={runMode} onChange={handleOnRunModeChange}>
+                                <option value='onStrategyStart'>On Strategy Start</option>
+                                <option value='onStrategyTick'>On Strategy Tick</option>
+                                <option value='onInputsReady'>On Inputs Ready</option>
+                                <option value='onEventTrigger'>On Event Trigger</option>
+                            </Select>
+                        </InputGroup>
+                    </Flex>
+                    <NumberInput
+                    className="nodrag"
+                    defaultValue={number}
+                        onChange={handleOnNumberChange}
+                    w='min'>
+                    <InputGroup>
+                        <InputLeftAddon >number</InputLeftAddon>
+                        <NumberInputField
+                            type="number"
+                            placeholder='number'
+                            minW='100px'
+                        />
+                    </InputGroup>
+                    <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                        </NumberInputStepper>
+                    </NumberInput>
+                </>
             ) : (
                     <Text>number : {data.parameters.number }</Text>
             )}
@@ -68,12 +99,12 @@ const NumberNode = memo((props) => {
     );
 });
 
-const DelayNode = memo(({ data, isConnectable, isEditable = true }) => {
+const DelayNode = memo(({ id, data, isConnectable, isEditable = true }) => {
     const handleOnMillisecondsChange = (val) => {
         data.parameters.milliseconds = Number.parseInt(val);
     }
     return (
-        <div classnname='node'>
+        <div classnname={id}>
             <Handle
                 type="target"
                 position={Position.Left}
@@ -82,9 +113,12 @@ const DelayNode = memo(({ data, isConnectable, isEditable = true }) => {
                 isConnectable={isConnectable}
             />
             <Flex m='5px'>
-                <Heading size='sm'>
-                    Delay
-                </Heading>
+                <Wrap spacing='5px'>
+                    <Heading size='sm'>
+                        Delay
+                    </Heading>
+                    <Text>({id})</Text>
+                </Wrap>
                 <Spacer />
                 <Tooltip label='Outputs the data delayed by a custom set milliseconds.' fontSize='md'>
                     <InfoOutlineIcon />
@@ -123,9 +157,19 @@ const DelayNode = memo(({ data, isConnectable, isEditable = true }) => {
         </div>
     );
 });
-const LogNode = memo(({ data, isConnectable, isEditable = true }) => {
+const LogNode = memo(({ id, data, isConnectable, isEditable = true }) => {
+    const [format, setFormat] = useState(data.parameters.format || `{data}`);
+
+    const handleFormatChange = (e) => {
+        console.log('handleOnRunModeChange: ', e);
+        setFormat(e.target.value);
+    }
+
+    useEffect(() => {
+        data.parameters.format = format;
+    }, [format]);
     return (
-        <div classnname='node'>
+        <div classnname={id}>
             <Handle
                 type="target"
                 position={Position.Left}
@@ -134,9 +178,12 @@ const LogNode = memo(({ data, isConnectable, isEditable = true }) => {
                 isConnectable={isConnectable}
             />
             <Flex m='5px'>
-                <Heading size='sm'>
-                    Log
-                </Heading>
+                <Wrap spacing='5px'>
+                    <Heading size='sm'>
+                        Log
+                    </Heading>
+                    <Text>({id})</Text>
+                </Wrap>
                 <Spacer />
                 <Tooltip label='Logs data to the console. For a custom format use {data} tag.' fontSize='md'>
                     <InfoOutlineIcon />
@@ -149,17 +196,14 @@ const LogNode = memo(({ data, isConnectable, isEditable = true }) => {
                         placeholder='format'
                         className="nodrag"
                         type="text"
-                        onChange={(e) => {
-                            data.parameters.format = e.target.value;
-                            console.log('data: ', data);
-                        }}
-                        defaultValue={data.parameters.format ? data.parameters.format : '{data}'}
+                        onChange={handleFormatChange}
+                        defaultValue={format}
                         w='min'
                         minW='200px'
                     />
                 </InputGroup>
             ) : (
-                    <Text>format: {data.parameters.format}</Text>
+                    <Text>format: {format}</Text>
             )}
         </div>
     );

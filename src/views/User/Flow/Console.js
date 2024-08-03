@@ -18,7 +18,7 @@ const Console = () => {
 
     // Function to add a message to the console
     const addMessage = (message) => {
-        setMessages(prevMessages => [JSON.stringify(message), ...prevMessages]);
+        setMessages(prevMessages => [message, ...prevMessages]);
     };
 
     // Expose the addMessage function to the window object for external use

@@ -22,10 +22,12 @@ class AuthService {
                 username,
                 password
             })
-        }).then(res => {
-            this.setToken(res.token)
-            return Promise.resolve(res);
+        }).then(({ token }) => {
+            console.log('login res: ', token);
+            this.setToken(token)
+            return Promise.resolve(token);
         })
+            .catch((error)=> Promise.reject(error));
     }
 
     loggedIn() {
@@ -44,12 +46,12 @@ class AuthService {
                 return false;
         }
         catch (err) {
-            return false;
+            return true;
         }
     }
 
     isAdmin() {
-        return this.getToken() && this.getProfile().isAdmin === 'TRUE';
+        return !this.isTokenExpired(this.getToken()) && this.getProfile() && this.getProfile().isAdmin === 'TRUE';
     }
 
     setToken(idToken) {
@@ -59,7 +61,9 @@ class AuthService {
 
     getToken() {
         // Retrieves the user token from localStorage
-        return localStorage.getItem('id_token');
+        var token = localStorage.getItem('id_token');
+        if (!token) return null;
+        return token;
     }
 
     logout() {
@@ -68,8 +72,16 @@ class AuthService {
     }
 
     getProfile() {
-        console.log('token: ', this.getToken());
-        return jwtDecode(this.getToken());
+        var token = this.getToken()
+        console.log('token: ', token);
+        if (!token) return null;
+        try {
+           var profile =  jwtDecode(this.getToken());
+        } catch (e) {
+            console.log(e);
+            return null;
+        }
+        return profile
     }
 }
 

@@ -32,7 +32,7 @@ import Services from 'Services';
 export default function HeaderLinks(props) {
     const { routes, variant, children, fixed, secondary, logoText, onOpen, ...rest } = props;
     const handleLogout = () => {
-        auth.logout();
+        Services.auth.logout();
         props.history.replace('/app/auth/signin');
     }
 

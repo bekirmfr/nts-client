@@ -20,18 +20,16 @@ import signInImage from "assets/img/signInImage.png";
 function SignIn(props) {
     const [username, setUsername] = React.useState('');
     const [password, setPassword] = React.useState('');
-    if (Services.auth.loggedIn()) {
-        props.history.replace('/app');
-    }
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
 
         Services.auth.login(username, password)
-            .then(res => {
+            .then(() => {
                 props.history.replace('/app');
             })
             .catch(err => {
+                console.log('login err: ', err);
                 alert(err);
             })
     }

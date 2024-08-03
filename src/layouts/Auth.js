@@ -4,6 +4,7 @@ import Footer from 'components/Footer/Footer.js';
 // core components
 import AuthNavbar from 'components/Navbars/AuthNavbar.js';
 import React from 'react';
+import Services from 'Services';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { authRoutes as routes } from 'routes.js';
 import '@fontsource/roboto/400.css';
@@ -88,8 +89,12 @@ export default function Pages(props) {
 				<Box w='100%'>
 					<Box ref={wrapper} w='100%'>
 						<Switch>
-							{getRoutes(routes)}
-							<Redirect from='/app/auth' to='/app/auth/signin' />
+							{!Services.auth.loggedIn() && getRoutes(routes)}
+							{Services.auth.loggedIn() ? (
+								<Redirect from='/app/auth' to='/app/user' />
+							) : (
+								<Redirect from='/app/auth' to='/app/auth/signin' />
+							)}
 						</Switch>
 					</Box>
 				</Box>

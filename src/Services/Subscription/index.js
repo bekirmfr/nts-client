@@ -15,13 +15,14 @@ class SubscriptionService {
                 method: 'POST'
             })
                 .then(res => {
+                    if (!res) reject({error: 'Ubale to fetch domain. Server is not responding.'})
                     const { error, data } = res;
                     if (error) {
                         console.log('SubscriptionService error: ', error);
-                        return reject(error);
+                        reject(error);
                     }
                     console.log('SubscriptionService data: ', data);
-                    return resolve(data);
+                    resolve(data);
                 });
         });
     }

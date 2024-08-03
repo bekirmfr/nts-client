@@ -12,12 +12,22 @@ import {
     TableContainer,
     Button,
     IconButton,
-    ButtonGroup
+    ButtonGroup,
+    Tooltip
 } from '@chakra-ui/react';
 import {
     EditIcon,
     ViewIcon,
 } from '@chakra-ui/icons';
+
+const ActionButton = (props) => {
+    const { text, onClick, id, isDisabled } = props;
+    return (
+        <Tooltip label='Can not edit idle strategy.' isDisabled={!isDisabled}>
+            <Button isDisabled={isDisabled} id={id} onClick={onClick.bind(id)} aria-label='{text}' size='xs' >{text}</Button>
+        </Tooltip>
+    );
+}
 
 export default (props) => {
     console.log('props: ', props);
@@ -26,14 +36,12 @@ export default (props) => {
 
     const onView = (e) => {
         e.preventDefault();
-        console.log(e.target);
         console.log(`Viewving strategy id #${e.target.id}`);
         let path = `/app/user/flow/view/${e.target.id}`;
         navigate.push(path);
     };
     const onEdit = (e) => {
         e.preventDefault();
-        console.log(e.target);
         console.log(`Editing strategy id #${e.target.id}`);
         let path = `/app/user/flow/edit/${e.target.id}`;
         navigate.push(path);
@@ -52,13 +60,15 @@ export default (props) => {
                 </Thead>
                 <Tbody>
                     {rows.map(row => (
-                        <Tr key={row.id }>
-                            {Object.values(row).map(cell => (
-                                <Td>{cell}</Td>
-                            ))}
+                        <Tr key={row.id}>
+                            {headers.map((header) => 
+                                    (
+                                        <Td key={header}>{row[header]}</Td>
+                                    )
+                                )}
                             <Td>
                                 <ButtonGroup gap='1'>
-                                    <Button id={row.id} onClick={onEdit.bind(row.id)} aria-label='Edit' size='xs' >Edit</Button>
+                                    <ActionButton text='Edit' onClick={onEdit} id={row && row.id} isDisabled={row && row.state == 'live'} />
                                     <Button id={row.id} onClick={onView.bind(row.id)} aria-label='View' size='xs' >View</Button>
                                     <Button size='xs'>Start</Button>
                                     <Button size='xs'>Stop</Button>

@@ -15,7 +15,11 @@ class App extends Component {
                     )}
                     <Route path={`/app/user`} component={UserLayout} />
                     <Route path={`/app/auth`} component={AuthLayout} />
-                    <Redirect from='/app' to='/app/user' />
+                    {Services.auth.loggedIn() ? (
+                        <Redirect from='/app' to='/app/user' />
+                    ) : (
+                        <Redirect from='/app' to='/app/auth' />
+                    )}
                     
                 </Switch>
             </BrowserRouter>
